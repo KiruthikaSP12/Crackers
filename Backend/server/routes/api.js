@@ -11,6 +11,10 @@ router.get("/health", (_req, res) => {
 
 router.post("/auth/register", (req, res) => {
   const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "Name, email, and password are required." });
+  }
+
   const exists = store.users.some((user) => user.email === email);
   if (exists) {
     return res.status(409).json({ message: "Email already registered." });
@@ -28,7 +32,18 @@ router.post("/auth/register", (req, res) => {
   };
 
   store.users.push(user);
-  res.status(201).json({ message: "Registration successful.", user: { ...user, password: undefined } });
+  res.status(201).json({
+    message: "Registration successful.",
+    token: `mock-token-${user.id}`,
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      addresses: user.addresses
+    }
+  });
 });
 
 router.post("/auth/login", (req, res) => {

@@ -11,8 +11,13 @@ async function request(path, options = {}) {
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ message: "Request failed." }));
-    throw new Error(error.message || "Request failed.");
+    const errorText = await response.text().catch(() => "");
+    try {
+      const error = JSON.parse(errorText);
+      throw new Error(error.message || "Request failed.");
+    } catch {
+      throw new Error(errorText || `Request failed with status ${response.status}.`);
+    }
   }
 
   return response.json();

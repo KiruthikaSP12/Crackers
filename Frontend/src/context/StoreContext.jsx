@@ -74,8 +74,10 @@ export function StoreProvider({ children }) {
   };
 
   const registerCustomer = async ({ name, email, password }) => {
-    await api.register({ name, email, password });
-    return login({ email, password, role: "customer" });
+    const response = await api.register({ name, email, password });
+    setCurrentUser(response.user);
+    window.localStorage.setItem("cracker-user", JSON.stringify(response.user));
+    return response.user;
   };
 
   const logout = async () => {
