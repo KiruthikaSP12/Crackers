@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: crackers-shop
+    runtime: node
+    rootDir: .
+    buildCommand: cd Frontend && npm install && npm run build && cd ../Backend && npm install
+    startCommand: cd Backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
