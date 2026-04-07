@@ -45,6 +45,10 @@ export const api = {
   getNotifications: () => request("/notifications"),
   addReview: (payload) => request("/reviews", { method: "POST", body: JSON.stringify(payload) }),
   getPayments: () => request("/payments"),
+  getPaymentConfig: () => request("/payments/config"),
+  createRazorpayOrder: (payload) => request("/payments/razorpay/order", { method: "POST", body: JSON.stringify(payload) }),
+  verifyRazorpayPayment: (payload) =>
+    request("/payments/razorpay/verify", { method: "POST", body: JSON.stringify(payload) }),
   getProfile: (id) => request(`/users/profile/${id}`),
   updateProfile: (id, payload) => request(`/users/profile/${id}`, { method: "PUT", body: JSON.stringify(payload) }),
   getDashboard: () => request("/dashboard", { role: "admin" }),

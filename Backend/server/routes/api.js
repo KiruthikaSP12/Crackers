@@ -2,8 +2,20 @@ import { Router } from "express";
 import { buildDashboard, enrichCart, getProductById, store } from "../data/store.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { hashPassword } from "../utils/security.js";
+import { createRazorpayOrder, isRazorpayConfigured, verifyRazorpaySignature } from "../utils/razorpay.js";
 
 const router = Router();
+
+const buildAppOrder = ({ userId, items, total, paymentMethod, paymentStatus }) => ({
+  id: Date.now(),
+  userId,
+  status: "Processing",
+  items,
+  total,
+  paymentMethod,
+  paymentStatus,
+  placedOn: new Date().toISOString().slice(0, 10)
+});
 
 router.get("/health", (_req, res) => {
   res.json({ status: "ok", message: "Crackers shop backend is running." });
@@ -246,14 +258,10 @@ router.get("/orders", (_req, res) => {
 });
 
 router.post("/orders", (req, res) => {
-  const order = {
-    id: Date.now(),
-    status: "Processing",
-    placedOn: new Date().toISOString().slice(0, 10),
-    ...req.body
-  };
+  const order = buildAppOrder(req.body);
 
   store.orders.push(order);
+  store.cart = [];
   res.status(201).json({ message: "Order placed successfully.", order });
 });
 
@@ -279,6 +287,81 @@ router.post("/orders/:id/cancel", (req, res) => {
 
 router.get("/payments", (_req, res) => {
   res.json(store.payments);
+});
+
+router.get("/payments/config", (_req, res) => {
+  res.json({
+    enabled: isRazorpayConfigured(),
+    keyId: process.env.RAZORPAY_KEY_ID || ""
+  });
+});
+
+router.post("/payments/razorpay/order", async (req, res) => {
+  if (!isRazorpayConfigured()) {
+    return res.status(503).json({ message: "Online payment is not configured yet." });
+  }
+
+  try {
+    const amount = Number(req.body.amount);
+    const receipt = req.body.receipt || `receipt_${Date.now()}`;
+    const order = await createRazorpayOrder({
+      amount,
+      receipt,
+      notes: req.body.notes || {}
+    });
+
+    res.status(201).json(order);
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Failed to create Razorpay order." });
+  }
+});
+
+router.post("/payments/razorpay/verify", (req, res) => {
+  const {
+    razorpay_order_id: razorpayOrderId,
+    razorpay_payment_id: razorpayPaymentId,
+    razorpay_signature: razorpaySignature,
+    orderPayload
+  } = req.body;
+
+  if (!isRazorpayConfigured()) {
+    return res.status(503).json({ message: "Online payment is not configured yet." });
+  }
+
+  const isValid = verifyRazorpaySignature({
+    orderId: razorpayOrderId,
+    paymentId: razorpayPaymentId,
+    signature: razorpaySignature
+  });
+
+  if (!isValid) {
+    return res.status(400).json({ message: "Invalid payment signature." });
+  }
+
+  const payment = {
+    id: Date.now(),
+    gateway: "Razorpay",
+    orderId: razorpayOrderId,
+    paymentId: razorpayPaymentId,
+    method: orderPayload.paymentMethod || "UPI",
+    status: "Paid",
+    amount: orderPayload.total
+  };
+
+  const appOrder = buildAppOrder({
+    ...orderPayload,
+    paymentStatus: "Paid"
+  });
+
+  store.payments.push(payment);
+  store.orders.push(appOrder);
+  store.cart = [];
+
+  res.json({
+    message: "Payment verified and order placed successfully.",
+    payment,
+    order: appOrder
+  });
 });
 
 router.post("/payments", (req, res) => {

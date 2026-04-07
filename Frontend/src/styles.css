@@ -406,6 +406,12 @@ button,
   font-weight: 600;
 }
 
+.helper-text {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 .detail-meta {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

@@ -14,12 +14,16 @@ export default function AccountPage() {
     removeCartItem,
     moveCartItemToWishlist,
     moveWishlistItemToCart,
-    currentUser
+    currentUser,
+    paymentConfig,
+    payWithRazorpay
   } = useStore();
 
   const customerOrders = orders.filter((order) => order.userId === (currentUser?.id || 2));
 
   const [form, setForm] = useState({ name: "", phone: "", addresses: "" });
+  const [paymentMethod, setPaymentMethod] = useState("upi");
+  const [paymentError, setPaymentError] = useState("");
 
   useEffect(() => {
     if (profile) {
@@ -38,6 +42,20 @@ export default function AccountPage() {
       phone: form.phone,
       addresses: form.addresses.split(",").map((item) => item.trim()).filter(Boolean)
     });
+  };
+
+  const handleCheckout = async () => {
+    try {
+      setPaymentError("");
+      if (paymentMethod === "cod") {
+        await placeOrder();
+        return;
+      }
+
+      await payWithRazorpay({ paymentMethod: paymentMethod === "upi" ? "UPI" : "Card" });
+    } catch (error) {
+      setPaymentError(error.message);
+    }
   };
 
   return (
@@ -106,7 +124,25 @@ export default function AccountPage() {
           <strong>Total</strong>
           <strong>Rs. {cart.total}</strong>
         </div>
-        <button onClick={placeOrder}>Place order with UPI</button>
+        <label className="field-label" htmlFor="payment-method">
+          Payment Method
+        </label>
+        <select
+          id="payment-method"
+          value={paymentMethod}
+          onChange={(event) => setPaymentMethod(event.target.value)}
+        >
+          <option value="upi">Razorpay UPI</option>
+          <option value="card">Razorpay Card</option>
+          <option value="cod">Cash on Delivery</option>
+        </select>
+        {!paymentConfig.enabled ? (
+          <p className="helper-text">Online payments are not configured yet. You can still use Cash on Delivery.</p>
+        ) : null}
+        {paymentError ? <p className="error-text">{paymentError}</p> : null}
+        <button onClick={handleCheckout}>
+          {paymentMethod === "cod" ? "Place order with COD" : `Pay with ${paymentMethod === "upi" ? "UPI" : "Card"}`}
+        </button>
       </section>
 
       <section className="panel">

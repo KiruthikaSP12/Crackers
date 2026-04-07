@@ -15,6 +15,7 @@ export function StoreProvider({ children }) {
   const [dashboard, setDashboard] = useState(null);
   const [currentUser, setCurrentUser] = useState(storedUser ? JSON.parse(storedUser) : null);
   const [toast, setToast] = useState("");
+  const [paymentConfig, setPaymentConfig] = useState({ enabled: false, keyId: "" });
   const [loading, setLoading] = useState(true);
 
   const showToast = (message) => {
@@ -31,7 +32,8 @@ export function StoreProvider({ children }) {
         api.getCart(),
         api.getWishlist(),
         api.getOrders(),
-        api.getNotifications()
+        api.getNotifications(),
+        api.getPaymentConfig()
       ]);
 
       setProducts(sharedValues[0]);
@@ -40,6 +42,7 @@ export function StoreProvider({ children }) {
       setWishlist(sharedValues[3]);
       setOrders(sharedValues[4]);
       setNotifications(sharedValues[5]);
+      setPaymentConfig(sharedValues[6]);
 
       if (currentUser?.id) {
         const profileData = await api.getProfile(currentUser.id);
@@ -131,7 +134,94 @@ export function StoreProvider({ children }) {
       paymentStatus: "Paid"
     });
     setOrders(await api.getOrders());
+    setCart(await api.getCart());
     showToast("Your order has been placed successfully.");
+  };
+
+  const loadRazorpayCheckout = async () => {
+    if (window.Razorpay) {
+      return true;
+    }
+
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const payWithRazorpay = async ({ paymentMethod = "UPI" } = {}) => {
+    if (!paymentConfig.enabled || !paymentConfig.keyId) {
+      throw new Error("Online payment is not configured yet.");
+    }
+
+    const scriptLoaded = await loadRazorpayCheckout();
+    if (!scriptLoaded) {
+      throw new Error("Unable to load Razorpay checkout.");
+    }
+
+    const orderPayload = {
+      userId: currentUser?.id || 2,
+      items: cart.items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
+      total: cart.total,
+      paymentMethod,
+      paymentStatus: "Paid"
+    };
+
+    const razorpayOrder = await api.createRazorpayOrder({
+      amount: cart.total * 100,
+      receipt: `order_${Date.now()}`,
+      notes: {
+        customerName: currentUser?.name || "Guest",
+        customerEmail: currentUser?.email || ""
+      }
+    });
+
+    await new Promise((resolve, reject) => {
+      const razorpay = new window.Razorpay({
+        key: paymentConfig.keyId,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        name: "Cracker Kingdom",
+        description: "Secure crackers order payment",
+        order_id: razorpayOrder.id,
+        method: {
+          upi: true,
+          card: true,
+          netbanking: true,
+          wallet: true
+        },
+        prefill: {
+          name: currentUser?.name || "",
+          email: currentUser?.email || "",
+          contact: currentUser?.phone || ""
+        },
+        theme: {
+          color: "#b42e13"
+        },
+        handler: async (response) => {
+          try {
+            await api.verifyRazorpayPayment({
+              ...response,
+              orderPayload
+            });
+            setOrders(await api.getOrders());
+            setCart(await api.getCart());
+            showToast("Payment successful. Your order has been placed.");
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        },
+        modal: {
+          ondismiss: () => reject(new Error("Payment cancelled."))
+        }
+      });
+
+      razorpay.open();
+    });
   };
 
   const cancelOrder = async (orderId) => {
@@ -173,6 +263,7 @@ export function StoreProvider({ children }) {
         currentUser,
         isAuthenticated: Boolean(currentUser),
         toast,
+        paymentConfig,
         loading,
         login,
         registerCustomer,
@@ -184,6 +275,7 @@ export function StoreProvider({ children }) {
         removeCartItem,
         moveCartItemToWishlist,
         placeOrder,
+        payWithRazorpay,
         cancelOrder,
         submitReview,
         updateProfile,

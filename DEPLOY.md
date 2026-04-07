@@ -16,3 +16,18 @@ This app is ready to deploy as a single service.
 - The frontend now uses `VITE_API_BASE` when provided, otherwise `/api`.
 - Vite proxies `/api` to `http://localhost:5000` during local development.
 - The Express backend serves `Frontend/dist` in production, so one hosted service can run the entire app.
+
+## Razorpay Setup
+
+Add these environment variables in Render for online payments:
+
+- `RAZORPAY_KEY_ID`
+- `RAZORPAY_KEY_SECRET`
+
+After setting them, redeploy the service. The customer account page will show:
+
+- `Razorpay UPI`
+- `Razorpay Card`
+- `Cash on Delivery`
+
+Without the Razorpay keys, the site will continue to work, but only COD should be used.
