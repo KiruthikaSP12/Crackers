@@ -11,13 +11,14 @@ async function request(path, options = {}) {
   });
 
   if (!response.ok) {
-    const errorText = await response.text().catch(() => "");
-    try {
-      const error = JSON.parse(errorText);
-      throw new Error(error.message || "Request failed.");
-    } catch {
-      throw new Error(errorText || `Request failed with status ${response.status}.`);
+    const contentType = response.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const error = await response.json().catch(() => null);
+      throw new Error(error?.message || "Request failed.");
     }
+
+    const errorText = await response.text().catch(() => "");
+    throw new Error(errorText || `Request failed with status ${response.status}.`);
   }
 
   return response.json();
@@ -52,6 +53,7 @@ export const api = {
   getProfile: (id) => request(`/users/profile/${id}`),
   updateProfile: (id, payload) => request(`/users/profile/${id}`, { method: "PUT", body: JSON.stringify(payload) }),
   getDashboard: () => request("/dashboard", { role: "admin" }),
+  getAdminCustomers: () => request("/admin/customers", { role: "admin" }),
   updateOrderStatus: (orderId, status) =>
     request(`/orders/${orderId}/status`, {
       method: "PUT",

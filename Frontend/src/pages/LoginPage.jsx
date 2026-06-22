@@ -2,17 +2,6 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useStore } from "../context/StoreContext.jsx";
 
-const demoAccounts = {
-  customer: {
-    email: "priya@example.com",
-    password: "customer123"
-  },
-  admin: {
-    email: "admin@crackershop.com",
-    password: "admin123"
-  }
-};
-
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,17 +10,29 @@ export default function LoginPage() {
   const [form, setForm] = useState({
     name: "",
     role: "customer",
-    email: demoAccounts.customer.email,
-    password: demoAccounts.customer.password
+    email: "",
+    password: ""
   });
   const [error, setError] = useState("");
 
+  const displayError = (() => {
+    if (!error) return "";
+    if (error.trim().startsWith("{")) {
+      try {
+        const parsed = JSON.parse(error);
+        return parsed.message || error;
+      } catch {
+        return error;
+      }
+    }
+    return error;
+  })();
+
   const handleRoleChange = (role) => {
-    setForm({
-      role,
-      email: demoAccounts[role].email,
-      password: demoAccounts[role].password
-    });
+    setForm((current) => ({
+      ...current,
+      role
+    }));
     setError("");
   };
 
@@ -52,18 +53,32 @@ export default function LoginPage() {
     setForm({
       name: "",
       role: "customer",
-      email: demoAccounts.customer.email,
-      password: demoAccounts.customer.password
+      email: "",
+      password: ""
     });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      const payload = {
+        ...form,
+        name: String(form.name || "").trim(),
+        email: String(form.email || "").trim(),
+        password: String(form.password || "").trim()
+      };
+      if (!payload.email || !payload.password) {
+        setError("Please enter your email and password.");
+        return;
+      }
+      if (mode === "register" && !payload.name) {
+        setError("Please enter your full name.");
+        return;
+      }
       const user =
         mode === "register"
-          ? await registerCustomer({ name: form.name, email: form.email, password: form.password })
-          : await login(form);
+          ? await registerCustomer({ name: payload.name, email: payload.email, password: payload.password })
+          : await login(payload);
       const destination = location.state?.from || (user.role === "admin" ? "/admin" : "/account");
       navigate(destination, { replace: true });
     } catch (err) {
@@ -142,20 +157,14 @@ export default function LoginPage() {
           <button type="submit">{mode === "register" ? "Create customer account" : `Login as ${form.role}`}</button>
         </form>
 
-        {error ? <p className="error-text">{error}</p> : null}
+        {displayError ? <p className="error-text">{displayError}</p> : null}
 
-        {mode === "login" ? (
-          <div className="demo-box">
-            <strong>Demo accounts</strong>
-            <p>Customer: `priya@example.com` / `customer123`</p>
-            <p>Admin: `admin@crackershop.com` / `admin123`</p>
-          </div>
-        ) : (
+        {mode === "register" ? (
           <div className="demo-box">
             <strong>Registration note</strong>
             <p>New signups are created as customer accounts and can log in immediately after registration.</p>
           </div>
-        )}
+        ) : null}
       </article>
     </section>
   );

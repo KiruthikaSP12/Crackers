@@ -13,6 +13,7 @@ export function StoreProvider({ children }) {
   const [notifications, setNotifications] = useState([]);
   const [profile, setProfile] = useState(null);
   const [dashboard, setDashboard] = useState(null);
+  const [adminCustomers, setAdminCustomers] = useState([]);
   const [currentUser, setCurrentUser] = useState(storedUser ? JSON.parse(storedUser) : null);
   const [toast, setToast] = useState("");
   const [paymentConfig, setPaymentConfig] = useState({ enabled: false, keyId: "" });
@@ -21,6 +22,11 @@ export function StoreProvider({ children }) {
   const showToast = (message) => {
     setToast(message);
     window.setTimeout(() => setToast(""), 3000);
+  };
+
+  const getProductName = (productId) => {
+    const product = products.find((item) => item.id === productId);
+    return product ? product.name : "Item";
   };
 
   const refresh = async () => {
@@ -53,8 +59,10 @@ export function StoreProvider({ children }) {
 
       if (currentUser?.role === "admin") {
         setDashboard(await api.getDashboard());
+        setAdminCustomers(await api.getAdminCustomers());
       } else {
         setDashboard(null);
+        setAdminCustomers([]);
       }
     } finally {
       setLoading(false);
@@ -94,11 +102,13 @@ export function StoreProvider({ children }) {
   const addProductToCart = async (productId, quantity = 1) => {
     await api.addToCart({ productId, quantity });
     setCart(await api.getCart());
+    showToast(`${getProductName(productId)} added to cart.`);
   };
 
   const addProductToWishlist = async (productId) => {
     await api.addToWishlist(productId);
     setWishlist(await api.getWishlist());
+    showToast(`${getProductName(productId)} added to wishlist.`);
   };
 
   const moveWishlistItemToCart = async (productId) => {
@@ -125,13 +135,13 @@ export function StoreProvider({ children }) {
     showToast("Item moved to wishlist.");
   };
 
-  const placeOrder = async () => {
+  const placeOrder = async ({ paymentMethod = "UPI", paymentStatus = "Paid" } = {}) => {
     await api.placeOrder({
       userId: currentUser?.id || 2,
       items: cart.items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
       total: cart.total,
-      paymentMethod: "UPI",
-      paymentStatus: "Paid"
+      paymentMethod,
+      paymentStatus
     });
     setOrders(await api.getOrders());
     setCart(await api.getCart());
@@ -260,6 +270,7 @@ export function StoreProvider({ children }) {
         notifications,
         profile,
         dashboard,
+        adminCustomers,
         currentUser,
         isAuthenticated: Boolean(currentUser),
         toast,

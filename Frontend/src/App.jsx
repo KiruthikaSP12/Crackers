@@ -1,7 +1,7 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import HomePage from "./pages/HomePage.jsx";
-import ProductDetailsPage from "./pages/ProductDetailsPage.jsx";
+import ProductsPage from "./pages/ProductsPage.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
@@ -28,15 +28,14 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/products/:id" element={<ProductDetailsPage />} />
-          <Route
-            path="/account"
-            element={
-              <ProtectedRoute allow={currentUser?.role === "customer"}>
-                <AccountPage />
-              </ProtectedRoute>
-            }
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/account" element={
+            <ProtectedRoute allow={currentUser?.role === "customer"}>
+              <AccountPage />
+            </ProtectedRoute>
+          }
           />
+
           <Route
             path="/admin"
             element={

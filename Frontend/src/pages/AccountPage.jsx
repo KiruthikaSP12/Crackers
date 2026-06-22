@@ -48,7 +48,7 @@ export default function AccountPage() {
     try {
       setPaymentError("");
       if (paymentMethod === "cod") {
-        await placeOrder();
+        await placeOrder({ paymentMethod: "COD", paymentStatus: "Pending" });
         return;
       }
 
@@ -124,25 +124,6 @@ export default function AccountPage() {
           <strong>Total</strong>
           <strong>Rs. {cart.total}</strong>
         </div>
-        <label className="field-label" htmlFor="payment-method">
-          Payment Method
-        </label>
-        <select
-          id="payment-method"
-          value={paymentMethod}
-          onChange={(event) => setPaymentMethod(event.target.value)}
-        >
-          <option value="upi">Razorpay UPI</option>
-          <option value="card">Razorpay Card</option>
-          <option value="cod">Cash on Delivery</option>
-        </select>
-        {!paymentConfig.enabled ? (
-          <p className="helper-text">Online payments are not configured yet. You can still use Cash on Delivery.</p>
-        ) : null}
-        {paymentError ? <p className="error-text">{paymentError}</p> : null}
-        <button onClick={handleCheckout}>
-          {paymentMethod === "cod" ? "Place order with COD" : `Pay with ${paymentMethod === "upi" ? "UPI" : "Card"}`}
-        </button>
       </section>
 
       <section className="panel">
@@ -162,12 +143,31 @@ export default function AccountPage() {
 
       <section className="panel">
         <h2>Order Management</h2>
+        <label className="field-label" htmlFor="payment-method">
+          Payment Method
+        </label>
+        <select
+          id="payment-method"
+          value={paymentMethod}
+          onChange={(event) => setPaymentMethod(event.target.value)}
+        >
+          <option value="upi">Razorpay UPI</option>
+          <option value="card">Razorpay Card</option>
+          <option value="cod">Cash on Delivery</option>
+        </select>
+        {!paymentConfig.enabled ? (
+          <p className="helper-text">Online payments are not configured yet. You can still use Cash on Delivery.</p>
+        ) : null}
+        {paymentError ? <p className="error-text">{paymentError}</p> : null}
+        <button onClick={handleCheckout}>
+          {paymentMethod === "cod" ? "Place order with COD" : `Pay with ${paymentMethod === "upi" ? "UPI" : "Card"}`}
+        </button>
         {customerOrders.map((order) => (
           <div key={order.id} className="line-item account-line-item">
             <div className="account-line-copy">
               <strong>Order #{order.id}</strong>
               <span>
-                {order.status} | {order.paymentMethod} | {order.paymentStatus}
+                {order.status} | {order.paymentMethod} | {order.paymentStatus} | Rs. {order.total}
               </span>
             </div>
             <div className="account-line-actions">

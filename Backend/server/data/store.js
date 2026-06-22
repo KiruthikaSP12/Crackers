@@ -43,7 +43,8 @@ export let store = {
       stock: 18,
       crackerCount: 45,
       popularity: 95,
-      image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1672670959598-1d32da1c6ec8?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.0.3&q=60&w=3000",
       description: "A festive family combo packed with sparklers, flower pots, and fountains.",
       rating: 4.8,
       reviews: 21
@@ -57,7 +58,8 @@ export let store = {
       stock: 80,
       crackerCount: 20,
       popularity: 88,
-      image: "https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1542430816-c67e631261c4?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Long-lasting bright sparklers for safe family celebrations.",
       rating: 4.6,
       reviews: 15
@@ -71,7 +73,8 @@ export let store = {
       stock: 32,
       crackerCount: 10,
       popularity: 73,
-      image: "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1672072961379-d0aee2e67eba?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "High-energy sound crackers for festive nights.",
       rating: 4.2,
       reviews: 11
@@ -85,7 +88,8 @@ export let store = {
       stock: 25,
       crackerCount: 25,
       popularity: 90,
-      image: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1589167642085-b3e55c0178be?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "A gentle selection of low-noise crackers and bright fountains.",
       rating: 4.7,
       reviews: 18
@@ -99,7 +103,8 @@ export let store = {
       stock: 90,
       crackerCount: 10,
       popularity: 86,
-      image: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1761066644935-14551e47af49?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Traditional flower pot crackers with bright upward fountain sparks.",
       rating: 4.5,
       reviews: 17
@@ -113,7 +118,7 @@ export let store = {
       stock: 60,
       crackerCount: 5,
       popularity: 89,
-      image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80",
+      image: "https://cdn.pixabay.com/photo/2021/02/14/07/35/flame-6013680_1280.jpg",
       description: "Tall colorful flower pot fountain for bright festive displays.",
       rating: 4.7,
       reviews: 22
@@ -127,7 +132,7 @@ export let store = {
       stock: 75,
       crackerCount: 10,
       popularity: 82,
-      image: "https://images.unsplash.com/photo-1502139214982-d0ad755818d8?auto=format&fit=crop&w=900&q=80",
+      image: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chakri_Fire_Cracker_Photo.JPG",
       description: "Fast-spinning ground chakkars with shimmering silver trails.",
       rating: 4.4,
       reviews: 13
@@ -141,7 +146,7 @@ export let store = {
       stock: 54,
       crackerCount: 10,
       popularity: 85,
-      image: "https://images.unsplash.com/photo-1519750157634-b6d493a0f77c?auto=format&fit=crop&w=900&q=80",
+      image: "https://upload.wikimedia.org/wikipedia/commons/1/15/Chakri_Fire_Cracker_Photo.JPG",
       description: "Color-changing spinning crackers ideal for family celebrations.",
       rating: 4.6,
       reviews: 14
@@ -155,7 +160,8 @@ export let store = {
       stock: 46,
       crackerCount: 6,
       popularity: 87,
-      image: "https://images.unsplash.com/photo-1570284613060-766c33850e83?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1750586658145-5b05347bc733?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "High-rise rockets with colorful burst effects and festival sparkle.",
       rating: 4.6,
       reviews: 20
@@ -169,7 +175,8 @@ export let store = {
       stock: 38,
       crackerCount: 7,
       popularity: 91,
-      image: "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1707158696193-c008bade2716?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "A compact seven-shot aerial cake with vivid sequential bursts.",
       rating: 4.8,
       reviews: 24
@@ -183,7 +190,8 @@ export let store = {
       stock: 26,
       crackerCount: 12,
       popularity: 93,
-      image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1715784229627-e5cd49b1ed90?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Premium aerial shell and multishot assortment for grand night displays.",
       rating: 4.9,
       reviews: 28
@@ -197,7 +205,7 @@ export let store = {
       stock: 64,
       crackerCount: 10,
       popularity: 80,
-      image: "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=900&q=80",
+      image: "https://upload.wikimedia.org/wikipedia/commons/6/61/Fireworks_%286369772889%29.jpg",
       description: "Power-packed festival bombs for strong celebratory sound effects.",
       rating: 4.2,
       reviews: 10
@@ -211,7 +219,8 @@ export let store = {
       stock: 72,
       crackerCount: 100,
       popularity: 84,
-      image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1672518215332-a716859f9de8?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Traditional ladi garland crackers for loud and exciting festive moments.",
       rating: 4.3,
       reviews: 16
@@ -225,7 +234,8 @@ export let store = {
       stock: 24,
       crackerCount: 1000,
       popularity: 88,
-      image: "https://images.unsplash.com/photo-1505236858219-8359eb29e329?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1672518215332-a716859f9de8?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Long-duration garland crackers for major festive events and celebrations.",
       rating: 4.5,
       reviews: 19
@@ -239,7 +249,8 @@ export let store = {
       stock: 110,
       crackerCount: 25,
       popularity: 78,
-      image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1645542351285-039fd9b03fca?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Kid-friendly poppers with tiny snaps and easy daytime fun.",
       rating: 4.5,
       reviews: 12
@@ -253,7 +264,8 @@ export let store = {
       stock: 68,
       crackerCount: 10,
       popularity: 81,
-      image: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1677008401073-23b0270290a6?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Light, playful whistling crackers for fun family-friendly celebrations.",
       rating: 4.4,
       reviews: 11
@@ -267,7 +279,8 @@ export let store = {
       stock: 84,
       crackerCount: 30,
       popularity: 79,
-      image: "https://images.unsplash.com/photo-1478145046317-39f10e56b5e9?auto=format&fit=crop&w=900&q=80",
+      image:
+        "https://images.unsplash.com/photo-1542430816-c67e631261c4?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000",
       description: "Family-size sparklers bundle with long burn time and bright finish.",
       rating: 4.6,
       reviews: 18

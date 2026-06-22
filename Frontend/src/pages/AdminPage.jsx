@@ -1,7 +1,7 @@
 import { useStore } from "../context/StoreContext.jsx";
 
 export default function AdminPage() {
-  const { dashboard, orders, products, categories, updateOrderStatus } = useStore();
+  const { dashboard, orders, products, categories, updateOrderStatus, adminCustomers, paymentConfig } = useStore();
 
   if (!dashboard) {
     return <section className="panel">Loading dashboard...</section>;
@@ -69,6 +69,39 @@ export default function AdminPage() {
         <p>Top category: {dashboard.customerInsights.topCategory}</p>
         <p>Repeat customers: {dashboard.customerInsights.repeatCustomers}</p>
         <p>Recent orders: {dashboard.recentOrders.map((order) => `#${order.id}`).join(", ")}</p>
+        <p>
+          Razorpay status: {paymentConfig.enabled ? "Enabled" : "Not configured"}{" "}
+          {paymentConfig.keyId ? "(Key set)" : ""}
+        </p>
+      </section>
+
+      <section className="panel">
+        <h2>Customer Orders and Payments</h2>
+        {adminCustomers.length === 0 ? (
+          <p>No customer accounts yet.</p>
+        ) : null}
+        {adminCustomers.map((customer) => (
+          <div key={customer.id} className="line-item admin-customer-row">
+            <div className="admin-customer-copy">
+              <strong>{customer.name}</strong>
+              <span>{customer.email}</span>
+              <span>{customer.phone || "No phone on file"}</span>
+              <span>{customer.addresses?.[0] || "No address on file"}</span>
+            </div>
+            <div className="admin-customer-meta">
+              <span>Orders: {customer.orders.length}</span>
+              <span>
+                Last order:{" "}
+                {customer.orders[customer.orders.length - 1]
+                  ? `#${customer.orders[customer.orders.length - 1].id}`
+                  : "None"}
+              </span>
+              <span>
+                Payments: {customer.payments.length || 0}
+              </span>
+            </div>
+          </div>
+        ))}
       </section>
     </div>
   );

@@ -22,12 +22,14 @@ router.get("/health", (_req, res) => {
 });
 
 router.post("/auth/register", (req, res) => {
-  const { name, email, password } = req.body;
+  const name = String(req.body.name || "").trim();
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password = String(req.body.password || "").trim();
   if (!name || !email || !password) {
     return res.status(400).json({ message: "Name, email, and password are required." });
   }
 
-  const exists = store.users.some((user) => user.email === email);
+  const exists = store.users.some((user) => String(user.email || "").toLowerCase() === email);
   if (exists) {
     return res.status(409).json({ message: "Email already registered." });
   }
@@ -59,8 +61,12 @@ router.post("/auth/register", (req, res) => {
 });
 
 router.post("/auth/login", (req, res) => {
-  const { email, password } = req.body;
-  const user = store.users.find((entry) => entry.email === email && entry.password === hashPassword(password));
+  const email = String(req.body.email || "").trim().toLowerCase();
+  const password = String(req.body.password || "").trim();
+  const user = store.users.find(
+    (entry) =>
+      String(entry.email || "").toLowerCase() === email && entry.password === hashPassword(password)
+  );
   if (!user) {
     return res.status(401).json({ message: "Invalid credentials." });
   }
@@ -340,6 +346,7 @@ router.post("/payments/razorpay/verify", (req, res) => {
 
   const payment = {
     id: Date.now(),
+    userId: orderPayload.userId,
     gateway: "Razorpay",
     orderId: razorpayOrderId,
     paymentId: razorpayPaymentId,
@@ -402,6 +409,26 @@ router.put("/notifications/:id/read", (req, res) => {
 
 router.get("/dashboard", requireAdmin, (_req, res) => {
   res.json(buildDashboard());
+});
+
+router.get("/admin/customers", requireAdmin, (_req, res) => {
+  const customers = store.users
+    .filter((user) => user.role === "customer")
+    .map((user) => {
+      const orders = store.orders.filter((order) => order.userId === user.id);
+      const payments = store.payments.filter((payment) => payment.userId === user.id);
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        addresses: user.addresses,
+        orders,
+        payments
+      };
+    });
+
+  res.json(customers);
 });
 
 export default router;
