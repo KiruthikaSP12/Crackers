@@ -1,8 +1,18 @@
-import { Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useStore } from "../context/StoreContext.jsx";
 
 export default function ProductsPage() {
-    const { products, addProductToCart, addProductToWishlist } = useStore();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { products, addProductToCart, addProductToWishlist, currentUser } = useStore();
+
+    const handleAction = (callback) => {
+        if (!currentUser) {
+            navigate("/login", { state: { from: location.pathname } });
+        } else {
+            callback();
+        }
+    };
 
     return (
         <div className="page-grid">
@@ -12,8 +22,12 @@ export default function ProductsPage() {
             </section>
 
             <section className="catalog">
-                {products.map((product) => (
-                    <article key={product.id} className="product-card panel">
+                {products.map((product, index) => (
+                    <article 
+                        key={product.id} 
+                        className="product-card panel float-always pop-in"
+                        style={{ animationDelay: `${index * 0.15}s` }}
+                    >
                         <img src={product.image} alt={product.name} />
 
                         <div className="product-copy">
@@ -27,23 +41,23 @@ export default function ProductsPage() {
                         </div>
 
                         <div className="button-row">
-                            <button onClick={() => addProductToCart(product.id)}>
+                            <button onClick={() => handleAction(() => addProductToCart(product.id))}>
                                 Add to Cart
                             </button>
 
                             <button
                                 className="ghost"
-                                onClick={() => addProductToWishlist(product.id)}
+                                onClick={() => handleAction(() => addProductToWishlist(product.id))}
                             >
                                 Wishlist
                             </button>
 
-                            <Link
-                                className="ghost link-button"
-                                to={`/products/${product.id}`}
+                            <button
+                                className="ghost"
+                                onClick={() => handleAction(() => navigate(`/products/${product.id}`))}
                             >
                                 Details
-                            </Link>
+                            </button>
                         </div>
                     </article>
                 ))}

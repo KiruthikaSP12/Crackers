@@ -28,14 +28,6 @@ export default function LoginPage() {
     return error;
   })();
 
-  const handleRoleChange = (role) => {
-    setForm((current) => ({
-      ...current,
-      role
-    }));
-    setError("");
-  };
-
   const handleModeChange = (nextMode) => {
     setMode(nextMode);
     setError("");
@@ -89,12 +81,11 @@ export default function LoginPage() {
   return (
     <section className="auth-shell">
       <article className="panel auth-card">
-        <p className="eyebrow">Role Based Login</p>
-        <h1>{mode === "register" ? "Create a customer account" : "Sign in as customer or admin"}</h1>
+        <h1>{mode === "register" ? "Create a customer account" : "Sign in to your account"}</h1>
         <p>
           {mode === "register"
             ? "Register a new customer account with your own email and password."
-            : "Choose your role first, then log in to access the right dashboard and controls."}
+            : "Enter your email and password to access your account."}
         </p>
 
         <div className="auth-mode-switch">
@@ -113,25 +104,6 @@ export default function LoginPage() {
             New Customer
           </button>
         </div>
-
-        {mode === "login" ? (
-          <div className="role-switch">
-            <button
-              type="button"
-              className={form.role === "customer" ? "role-chip active-role" : "role-chip"}
-              onClick={() => handleRoleChange("customer")}
-            >
-              Customer
-            </button>
-            <button
-              type="button"
-              className={form.role === "admin" ? "role-chip active-role" : "role-chip"}
-              onClick={() => handleRoleChange("admin")}
-            >
-              Admin
-            </button>
-          </div>
-        ) : null}
 
         <form className="stack-form" onSubmit={handleSubmit}>
           {mode === "register" ? (
@@ -154,17 +126,12 @@ export default function LoginPage() {
             onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))}
             placeholder="Password"
           />
-          <button type="submit">{mode === "register" ? "Create customer account" : `Login as ${form.role}`}</button>
+          <button type="submit" className="primary-btn" style={{ width: "100%", marginTop: "1rem" }}>
+            {mode === "register" ? "Create customer account" : "Login"}
+          </button>
         </form>
 
         {displayError ? <p className="error-text">{displayError}</p> : null}
-
-        {mode === "register" ? (
-          <div className="demo-box">
-            <strong>Registration note</strong>
-            <p>New signups are created as customer accounts and can log in immediately after registration.</p>
-          </div>
-        ) : null}
       </article>
     </section>
   );

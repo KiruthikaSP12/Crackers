@@ -2,9 +2,18 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Layout from "./components/Layout.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ProductsPage from "./pages/ProductsPage.jsx";
-import AccountPage from "./pages/AccountPage.jsx";
-import AdminPage from "./pages/AdminPage.jsx";
+import AboutPage from "./pages/AboutPage";
+import ServicesPage from "./pages/ServicesPage";
+import ContactPage from "./pages/ContactPage";
 import LoginPage from "./pages/LoginPage.jsx";
+import OffersPage from "./pages/OffersPage.jsx";
+import FaqPage from "./pages/FaqPage.jsx";
+import PrivacyPage from "./pages/PrivacyPage.jsx";
+import TermsPage from "./pages/TermsPage.jsx";
+import RefundPage from "./pages/RefundPage.jsx";
+import FeedbackPage from "./pages/FeedbackPage.jsx";
+import AnimatedPage from "./components/AnimatedPage.jsx";
+import SparkleEffect from "./components/SparkleEffect.jsx";
 import { useStore } from "./context/StoreContext.jsx";
 
 function ProtectedRoute({ allow, children }) {
@@ -22,28 +31,23 @@ export default function App() {
 
   return (
     <Layout>
+      <SparkleEffect />
       {loading ? (
-        <section className="panel">Loading crackers shop...</section>
+        <section className="panel page-transition page-enter-active">Loading crackers shop...</section>
       ) : (
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/account" element={
-            <ProtectedRoute allow={currentUser?.role === "customer"}>
-              <AccountPage />
-            </ProtectedRoute>
-          }
-          />
-
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute allow={currentUser?.role === "admin"}>
-                <AdminPage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/" element={<AnimatedPage><HomePage /></AnimatedPage>} />
+          <Route path="/products" element={<AnimatedPage><ProductsPage /></AnimatedPage>} />
+          <Route path="/offers" element={<AnimatedPage><OffersPage /></AnimatedPage>} />
+          <Route path="/about" element={<AnimatedPage><AboutPage /></AnimatedPage>} />
+          <Route path="/services" element={<AnimatedPage><ServicesPage /></AnimatedPage>} />
+          <Route path="/contact" element={<AnimatedPage><ContactPage /></AnimatedPage>} />
+          <Route path="/login" element={<AnimatedPage><LoginPage /></AnimatedPage>} />
+          <Route path="/faq" element={<AnimatedPage><FaqPage /></AnimatedPage>} />
+          <Route path="/privacy" element={<AnimatedPage><PrivacyPage /></AnimatedPage>} />
+          <Route path="/terms" element={<AnimatedPage><TermsPage /></AnimatedPage>} />
+          <Route path="/refund" element={<AnimatedPage><RefundPage /></AnimatedPage>} />
+          <Route path="/feedback" element={<AnimatedPage><FeedbackPage /></AnimatedPage>} />
         </Routes>
       )}
     </Layout>

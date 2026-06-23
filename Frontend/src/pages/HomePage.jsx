@@ -1,269 +1,102 @@
-import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useStore } from "../context/StoreContext.jsx";
 
 export default function HomePage() {
-  const {
-    products,
-    categories,
-    addProductToCart,
-    addProductToWishlist
-  } = useStore();
-  const [filters, setFilters] = useState({ query: "", category: "all", sortBy: "popularity", type: "all" });
-  const testimonials = [
-    {
-      name: "Kondal Raj Ramamoorthy",
-      place: "Chennai",
-      quote: "Excellent service, safe packing, and on-time delivery. The products arrived in great condition."
-    },
-    {
-      name: "Amit Kumar Nayak",
-      place: "Bhubaneswar",
-      quote: "Easy to order online, budget-friendly pricing, and smooth delivery support for family celebrations."
-    },
-    {
-      name: "Mano Adon",
-      place: "Madurai",
-      quote: "Very easy to shop. The crackers quality matched what was shown and delivery was timely."
-    }
-  ];
-  const featuredTypes = [
-    "Flower Pot",
-    "Sparklers",
-    "Ground Spinner",
-    "Fountain",
-    "Rocket",
-    "Aerial Shell",
-    "7 Shots",
-    "Bomb",
-    "Garland",
-    "Poppers",
-    "Whistling"
-  ];
-
-  const filteredProducts = useMemo(() => {
-    let output = [...products];
-    if (filters.query) {
-      output = output.filter((item) => item.name.toLowerCase().includes(filters.query.toLowerCase()));
-    }
-    if (filters.category !== "all") {
-      output = output.filter((item) => item.categoryId === Number(filters.category));
-    }
-    if (filters.type !== "all") {
-      output = output.filter((item) => item.type.toLowerCase() === filters.type.toLowerCase());
-    }
-    if (filters.sortBy === "price-low") output.sort((a, b) => a.price - b.price);
-    else if (filters.sortBy === "price-high") output.sort((a, b) => b.price - a.price);
-    else output.sort((a, b) => b.popularity - a.popularity);
-
-    return output;
-  }, [filters, products]);
+  const { products } = useStore();
 
   return (
     <div className="page-grid">
-      <section id="home" className="storefront-hero panel">
-        <div className="hero-copy">
-          <p className="eyebrow">Premium Sivakasi Crackers</p>
+
+      {/* HERO SECTION */}
+      <section id="home" className="hero-section">
+        <div className="hero-content">
+          <span className="hero-badge">
+            🔥 #1 Premium Cracker Store
+          </span>
 
           <h1>
-            Celebrate Every Festival
-            with Cracker Kingdom
+            Light Up Your Celebrations
+            <br />
+            <span>With Every Spark</span>
           </h1>
 
-          <p>
-            Discover premium quality sparklers,
-            flower pots, rockets, fountains,
-            gift boxes and festive collections
-            at affordable wholesale prices.
+          <p className="hero-desc">
+            From vibrant sparklers to booming aerial shells —
+            experience authentic Sivakasi fireworks crafted with
+            tradition, care, and the finest quality.
           </p>
 
           <div className="button-row">
-            <a className="link-button" href="#products">
-              Shop Now
-            </a>
+            <Link className="primary-btn" to="/products">
+              🛒 Explore Shop
+            </Link>
 
-            <a className="ghost link-button" href="#about">
-              Learn More
-            </a>
+            <Link className="ghost-btn" to="/offers">
+              🏷️ Today's Offers
+            </Link>
+          </div>
+
+          <div className="hero-stats">
+            <div>
+              <h3>100+</h3>
+              <span>Products</span>
+            </div>
+
+            <div>
+              <h3>15+</h3>
+              <span>Brands</span>
+            </div>
+
+            <div>
+              <h3>15,000+</h3>
+              <span>Happy Customers</span>
+            </div>
           </div>
         </div>
 
-        <div className="hero-banner">
+        <div className="hero-image-wrapper">
+          <div className="floating-badge badge-left">
+            ⭐ 4.9<br/>
+            <span>2.5K+ Reviews</span>
+          </div>
+          <div className="floating-badge badge-right">
+            🏆 Best 2024<br/>
+            <span>Fireworks Store</span>
+          </div>
           <img
+            className="hero-main-img"
             src="https://images.unsplash.com/photo-1467810563316-b5476525c0f9"
-            alt="Festival Fireworks"
+            alt="Cracker Kingdom Fireworks"
           />
         </div>
       </section>
-      <section id="about" className="panel about-section">
-        <div>
-          <p className="eyebrow">About Cracker Kingdom</p>
-          <h2>Your Trusted Destination for Premium Sivakasi Crackers</h2>
-        </div>
-        <p>
-          Cracker Kingdom brings together premium Sivakasi fireworks, clean category browsing, fast add-to-cart ordering,
-          wishlist support, and role-based admin management. Customers can explore sparklers, flower pots, rockets,
-          aerial shots, bombs, ladis, and kid-friendly options in one easy storefront.
-        </p>
-        <p>
-          The experience is built to feel familiar to shoppers looking for a wholesale-style crackers catalog, with a
-          department menu, category-led browsing, service highlights, and trust-focused presentation.
-        </p>
-      </section>
 
-      <section className="panel">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">What Our Customers Say</p>
-            <h2>Testimonials from festive buyers</h2>
-          </div>
+      {/* MINIMAL FEATURED PRODUCTS */}
+      <section className="home-section minimal-products">
+        <div className="section-heading-centered">
+          <h2>Our Best Sellers</h2>
+          <p>Handpicked favorites for your celebration.</p>
         </div>
 
-        <div className="testimonial-grid">
-          {testimonials.map((testimonial) => (
-            <article key={testimonial.name} className="testimonial-card">
-              <p>{testimonial.quote}</p>
-              <strong>{testimonial.name}</strong>
-              <span>{testimonial.place}</span>
-            </article>
-          ))}
-        </div>
-      </section>
-      <section className="panel">
-        <div className="section-heading">
-          <div>
-            <p className="eyebrow">Best Sellers</p>
-            <h2>Featured Products</h2>
-          </div>
-        </div>
-
-        <div className="catalog">
-          {products.slice(0, 4).map((product) => (
-            <article key={product.id} className="product-card panel">
-              <img src={product.image} alt={product.name} />
-              <div className="product-copy">
+        <div className="simple-catalog">
+          {products.slice(0, 4).map((product, index) => (
+            <article 
+              key={product.id} 
+              className="simple-product float-always pop-in"
+              style={{ animationDelay: `${index * 0.15}s` }}
+            >
+              <div className="img-container">
+                <img src={product.image} alt={product.name} />
+              </div>
+              <div className="simple-product-copy">
                 <h3>{product.name}</h3>
-                <strong>Rs. {product.price}</strong>
+                <strong className="price">₹ {product.price}</strong>
               </div>
             </article>
           ))}
         </div>
       </section>
-      <section id="services" className="service-grid">
-        <article className="panel service-card">
-          <p className="eyebrow">Our Services</p>
-          <h3>Quick Delivery</h3>
-          <p>Safe dispatch and convenient delivery planning for festive orders and event purchases.</p>
-        </article>
-        <article className="panel service-card">
-          <p className="eyebrow">Support</p>
-          <h3>24/7 Help Center</h3>
-          <p>Assistance with category selection, bulk purchases, family packs, and seasonal combo orders.</p>
-        </article>
-        <article className="panel service-card">
-          <p className="eyebrow">Pricing</p>
-          <h3>Wholesale Value</h3>
-          <p>Competitive pricing across Sivakasi crackers with clear browsing, wishlist, and cart flow.</p>
-        </article>
-      </section>
 
-      <section id="products">
-        <div>
-          <section className="panel filters">
-            <input
-              type="text"
-              placeholder="Search crackers"
-              value={filters.query}
-              onChange={(event) => setFilters((current) => ({ ...current, query: event.target.value }))}
-            />
-            <select
-              value={filters.category}
-              onChange={(event) => setFilters((current) => ({ ...current, category: event.target.value }))}
-            >
-              <option value="all">All categories</option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-            <select
-              value={filters.sortBy}
-              onChange={(event) => setFilters((current) => ({ ...current, sortBy: event.target.value }))}
-            >
-              <option value="popularity">Popularity</option>
-              <option value="price-low">Price low to high</option>
-              <option value="price-high">Price high to low</option>
-            </select>
-          </section>
-
-          <section className="catalog">
-            {!filteredProducts.length ? (
-              <article className="panel">
-                No crackers matched that type or filter. Try another cracker category.
-              </article>
-            ) : null}
-            {filteredProducts.map((product) => (
-              <article key={product.id} className="product-card panel">
-                <img src={product.image} alt={product.name} />
-                <div className="product-copy">
-                  <div>
-                    <span className="pill">{product.type}</span>
-                    <span className="muted">Stock {product.stock}</span>
-                  </div>
-                  <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                  <p className="count-copy">Cracker count: {product.crackerCount}</p>
-                  <div className="price-row">
-                    <strong>Rs. {product.price}</strong>
-                    <span>{product.rating} rating</span>
-                  </div>
-                </div>
-                <div className="button-row">
-                  <button onClick={() => addProductToCart(product.id)}>Add to cart</button>
-                  <button className="ghost" onClick={() => addProductToWishlist(product.id)}>
-                    Wishlist
-                  </button>
-                  <Link className="ghost link-button" to={`/products/${product.id}`}>
-                    Details
-                  </Link>
-                </div>
-              </article>
-            ))}
-          </section>
-        </div>
-      </section>
-
-      <section id="contact" className="panel contact-section">
-        <div>
-          <p className="eyebrow">Reach Us On</p>
-          <h2>Need help with orders, bulk purchases, or department selection?</h2>
-        </div>
-        <div className="contact-grid">
-          <div className="notice">
-            <strong>Call us</strong>
-            <p>(+91) 754 002 7151</p>
-            <p>(+91) 956 691 3888</p>
-          </div>
-          <div className="notice">
-            <strong>Email support</strong>
-            <p>support@crackerkingdom.com</p>
-          </div>
-          <div className="notice">
-            <strong>Coverage</strong>
-            <p>Sivakasi direct stock, online ordering, and festival-ready dispatch support.</p>
-          </div>
-        </div>
-      </section>
-      <footer className="panel footer">
-        <h3>Cracker Kingdom</h3>
-        <p>
-          Premium Sivakasi Crackers • Safe Delivery • Wholesale Pricing
-        </p>
-        <p>
-          © 2026 Cracker Kingdom. All Rights Reserved.
-        </p>
-      </footer>
     </div>
   );
 }

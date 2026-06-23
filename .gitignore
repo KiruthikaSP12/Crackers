@@ -12,3 +12,5 @@ Backend/dist/
 Thumbs.db
 .env
 .env.*
+
+node_modules/

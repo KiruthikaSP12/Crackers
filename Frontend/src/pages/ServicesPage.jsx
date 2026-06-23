@@ -1,12 +1,13 @@
 export default function ServicesPage() {
     return (
-        <section className="panel">
+        <section className="page-section">
             <h1>Our Services</h1>
 
             <ul>
-                <li>Quick Delivery</li>
-                <li>24/7 Customer Support</li>
-                <li>Wholesale Pricing</li>
+                <li>Bulk Orders</li>
+                <li>Festival Packages</li>
+                <li>Door Delivery</li>
+                <li>Corporate Orders</li>
             </ul>
         </section>
     );
