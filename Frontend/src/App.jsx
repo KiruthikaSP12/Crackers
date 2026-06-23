@@ -12,6 +12,9 @@ import PrivacyPage from "./pages/PrivacyPage.jsx";
 import TermsPage from "./pages/TermsPage.jsx";
 import RefundPage from "./pages/RefundPage.jsx";
 import FeedbackPage from "./pages/FeedbackPage.jsx";
+import CartPage from "./pages/CartPage.jsx";
+import WishlistPage from "./pages/WishlistPage.jsx";
+import CheckoutPage from "./pages/CheckoutPage.jsx";
 import AnimatedPage from "./components/AnimatedPage.jsx";
 import SparkleEffect from "./components/SparkleEffect.jsx";
 import { useStore } from "./context/StoreContext.jsx";
@@ -48,6 +51,9 @@ export default function App() {
           <Route path="/terms" element={<AnimatedPage><TermsPage /></AnimatedPage>} />
           <Route path="/refund" element={<AnimatedPage><RefundPage /></AnimatedPage>} />
           <Route path="/feedback" element={<AnimatedPage><FeedbackPage /></AnimatedPage>} />
+          <Route path="/cart" element={<AnimatedPage><CartPage /></AnimatedPage>} />
+          <Route path="/wishlist" element={<AnimatedPage><WishlistPage /></AnimatedPage>} />
+          <Route path="/checkout" element={<ProtectedRoute allow={currentUser}><AnimatedPage><CheckoutPage /></AnimatedPage></ProtectedRoute>} />
         </Routes>
       )}
     </Layout>
